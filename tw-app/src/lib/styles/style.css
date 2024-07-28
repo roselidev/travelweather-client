@@ -1,0 +1,39 @@
+h1{
+    align-self: center;
+}
+
+.container{
+    width: 500px;
+    margin: 0 auto;
+    display:flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.cont-bar{
+    width: 50%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    align-content: center;
+}
+
+button {
+    background-color: white;
+    border-radius: 999px;
+    border: 1px solid lightgrey;
+    box-shadow: 1px 1px 3px lightgray;
+    padding: 3px 10px;
+    color: grey;
+}
+
+.cont-bar .primary {
+    background-color:forestgreen;
+    color: white;
+    font-weight: 600;
+    border: 1px solid forestgreen;
+}
