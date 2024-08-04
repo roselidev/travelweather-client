@@ -1,20 +1,20 @@
 <script lang="ts">
   import { writable } from 'svelte/store';
   import { selectedLocation } from '../stores';
+  import { onMount } from 'svelte';
+  import Swiper from 'swiper/bundle';
+  import 'swiper/swiper-bundle.css';
+
+  let swiperContainer;
 
   let mode: 'simple' | 'detailed' = 'simple';
-  let countries = ['USA', 'JAP', 'CHN', 'CA', 'AUC'];
-  let locations = {
-    'KOR': ['Seoul', 'Busan', 'Incheon'],
-    'USA': ['New York', 'Los Angeles', 'Chicago'],
-    'JAP': ['Tokyo', 'Osaka', 'Kyoto'],
-    'CHN': ['Beijing', 'Nanjing', 'Shanghai'],
-    'CA': ['Toronto', 'Vancouber', 'Ottawa'],
-    'AUC': ['Sydney', 'Melbourne', 'Perth']
-  };
-  let selectedCountry = 'USA';
-  let selectedPlace = 'New York';
+  let locations = {};
+  let countries = [];
+  let selectedCountry = '';
+  let selectedPlace = '';
 
+  let randomCountries = [];
+  
   function handleCountryChange(event: Event) {
     const target = event.target as HTMLSelectElement;
     selectedCountry = target.value;
@@ -27,21 +27,48 @@
     selectedLocation.set({ country: selectedCountry, place: selectedPlace });
   }
 
-  function handleCountLocChange(event: Event){
-    const target = event.target as HTMLSelectElement;
+  function handleCountLocChange(event: Event) {
+    const target = event.currentTarget as HTMLButtonElement;
     selectedCountry = target.value.split("-")[0];
     selectedPlace = target.value.split("-")[1];
-    selectedLocation.set({ country: selectedCountry, place: selectedPlace })
+    selectedLocation.set({ country: selectedCountry, place: selectedPlace });
   }
+
+  function shuffleAndSelectCountries() {
+      let shuffled = countries.sort(() => 0.5 - Math.random());
+      randomCountries = shuffled.slice(0, 5);
+  }
+
+  onMount(async () => {
+      const response = await fetch('/locations.json');
+      locations = await response.json();
+      countries = Object.keys(locations);
+      selectedCountry = countries[0];
+      selectedPlace = locations[countries[0]];
+      shuffleAndSelectCountries();
+
+      new Swiper(swiperContainer, {
+        slidesPerView: '1.5',
+        spaceBetween: 0,
+        freeMode: true,
+        mousewheel: true,
+      });
+  });
 </script>
 
-<div class="cont-bar">
+<div class="cont-col">
   {#if mode === 'simple'}
-    <button on:click={handleCountLocChange} value="USA-New York">미국 뉴욕</button>
-    <button on:click={handleCountLocChange} value="JAP-Tokyo">일본 도쿄</button>
-    <button on:click={handleCountLocChange} value="CHN-Beijing">중국 베이징</button>
-    <button on:click={handleCountLocChange} value="CA-Vancouber">캐나다 벤쿠버</button>
-    <button on:click={handleCountLocChange} value="AUC-Sydney">호주 시드니</button>
+    <div class="swiper-container" bind:this={swiperContainer}>
+      <div class="swiper-wrapper">
+        {#each randomCountries as country}
+          <div class="swiper-slide">
+            <button on:click={handleCountLocChange} value={`${country}-${locations[country]}`}>
+                {country} {locations[country]}
+            </button>
+          </div>
+        {/each}
+      </div>
+    </div>
     <button on:click={() => mode = 'detailed'}>상세선택</button>
   {:else}
     <select on:change={handleCountryChange}>
@@ -56,10 +83,4 @@
     </select>
     <button on:click={() => mode = 'simple'}>간편선택</button>
   {/if}
-
-</div>
-  
-<div> 
-  {selectedCountry}
-  {selectedPlace} 
 </div>

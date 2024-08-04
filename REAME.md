@@ -10,6 +10,7 @@ Sveltekit
 ---
 
 ### Dev-Env Setting
+
 `conda create -n svelte python=3.11`
 `conda activate svelte`
 `conda install -c conda-forge nodejs`

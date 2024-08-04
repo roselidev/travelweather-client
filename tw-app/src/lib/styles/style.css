@@ -1,5 +1,7 @@
 h1{
     align-self: center;
+    align-content: center;
+    font-size: large;
 }
 
 .container{
@@ -10,30 +12,75 @@ h1{
     gap: 30px;
 }
 
+.cont-col{
+    max-width: 90%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
 .cont-bar{
-    width: 50%;
+    max-width: 90%;
     margin: 0 auto;
     display: flex;
     flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    flex-wrap: wrap;
+    align-items:flex-start;
+    justify-content: flex-start;
     align-content: center;
+    gap: 5px;
 }
 
+.swiper-container {
+    max-width: 500px;
+    margin: auto;
+    overflow: hidden;
+    padding: 10px 0;
+}
+
+.swiper-wrapper {
+    display: flex;
+}
+  
 button {
     background-color: white;
     border-radius: 999px;
     border: 1px solid lightgrey;
     box-shadow: 1px 1px 3px lightgray;
     padding: 3px 10px;
-    color: grey;
+    color: rgb(90, 90, 90);
+    text-wrap: nowrap;
 }
 
-.cont-bar .primary {
+.month-btn {
+    background-color: white;
+    border-radius: 999px;
+    border: 1px solid lightgrey;
+    box-shadow: 1px 1px 3px lightgray;
+    padding: 3px 10px;
+    color: grey;
+    text-wrap: nowrap;
+    font-size: 1.1rem;
+}
+
+button:hover {
+    background-color: lightgrey;
+}
+
+button:focus {
+    outline: none;
+    background-color: lightgrey;
+}
+
+button .primary {
     background-color:forestgreen;
     color: white;
     font-weight: 600;
     border: 1px solid forestgreen;
+}
+
+.status-text {
+    font-size: small;
+    font-weight: 600;
+    color: forestgreen;
 }

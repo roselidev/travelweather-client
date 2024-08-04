@@ -1,22 +1,36 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
   import { selectedDate } from '../stores';
-  
-  let mode: 'simple' | 'detailed' = 'simple';
-  let currentDate = new Date();
+  import Swiper from 'swiper/bundle';
+  import 'swiper/swiper-bundle.css';
 
-  function handleDateChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    selectedDate.set(target.value);
+  let swiperContainer;
+
+  function handleMonthChange(month: string) {
+    selectedDate.set(month);
   }
+
+  onMount(() => {
+    const swiper = new Swiper(swiperContainer, {
+      slidesPerView: 7.5,
+      spaceBetween: 0,
+      freeMode: true,
+      mousewheel: true,
+    });
+  });
 </script>
 
-<div class="cont-bar">
-  {#if mode === 'simple'}
-    <input type="month" min="{currentDate.toISOString().slice(0, 7)}" on:change={handleDateChange} />
-    <button class="primary" on:click={() => mode = 'detailed'}>상세선택</button>
-  {:else}
-    <input type="date" min="{currentDate.toISOString().slice(0, 10)}" on:change={handleDateChange} />
-    <button on:click={() => mode = 'simple'}>간편선택</button>
-  {/if}
+<div class="cont-col">
+  <div class="swiper-container" bind:this={swiperContainer}>
+    <div class="swiper-wrapper">
+      {#each Array(12) as _, index}
+        <div class="swiper-slide">
+          <button class="month-btn" on:click={() => handleMonthChange((index + 1).toString().padStart(2, '0'))}>
+            {index + 1}월
+          </button>
+        </div>
+      {/each}
+    </div>
+  </div>
 </div>
