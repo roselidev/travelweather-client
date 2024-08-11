@@ -84,3 +84,13 @@ button .primary {
     font-weight: 600;
     color: forestgreen;
 }
+
+.month-btn.selected-start {
+    background-color: green;
+    color: white;
+  }
+
+.month-btn.selected-end {
+background-color: red;
+color: white;
+}

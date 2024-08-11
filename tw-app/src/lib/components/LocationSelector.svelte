@@ -1,6 +1,6 @@
 <script lang="ts">
   import { writable } from 'svelte/store';
-  import { selectedLocation } from '../stores';
+  import { country, city } from '../stores';
   import { onMount } from 'svelte';
   import Swiper from 'swiper/bundle';
   import 'swiper/swiper-bundle.css';
@@ -24,15 +24,16 @@
   function handleLocationChange(event: Event) {
     const target = event.target as HTMLSelectElement;
     selectedPlace = target.value;
-    selectedLocation.set({ country: selectedCountry, place: selectedPlace });
+    country.set(selectedCountry);
+    city.set(selectedPlace);
   }
 
   function handleCountLocChange(event: Event) {
     const target = event.currentTarget as HTMLButtonElement;
     selectedCountry = target.value.split("-")[0];
     selectedPlace = target.value.split("-")[1];
-    selectedLocation.set({ country: selectedCountry, place: selectedPlace });
-  }
+    country.set(selectedCountry);
+    city.set(selectedPlace);  }
 
   function shuffleAndSelectCountries() {
       let shuffled = countries.sort(() => 0.5 - Math.random());
@@ -60,10 +61,10 @@
   {#if mode === 'simple'}
     <div class="swiper-container" bind:this={swiperContainer}>
       <div class="swiper-wrapper">
-        {#each randomCountries as country}
+        {#each randomCountries as c}
           <div class="swiper-slide">
-            <button on:click={handleCountLocChange} value={`${country}-${locations[country]}`}>
-                {country} {locations[country]}
+            <button on:click={handleCountLocChange} value={`${c}-${locations[c]}`}>
+                {c} {locations[c]}
             </button>
           </div>
         {/each}
@@ -72,8 +73,8 @@
     <button on:click={() => mode = 'detailed'}>상세선택</button>
   {:else}
     <select on:change={handleCountryChange}>
-      {#each countries as country}
-        <option value="{country}">{country}</option>
+      {#each countries as c}
+        <option value="{c}">{c}</option>
       {/each}
     </select>
     <select on:change={handleLocationChange}>

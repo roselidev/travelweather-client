@@ -1,9 +1,8 @@
 <script lang="ts">
   import DateSelector from '$lib/components/DateSelector.svelte';
   import LocationSelector from '$lib/components/LocationSelector.svelte';
-  import WeatherCalendar from '$lib/components/WeatherCalendar.svelte';
-  import WeatherSuggestion from '$lib/components/WeatherSuggestion.svelte';
-  import { selectedDate, selectedLocation } from '$lib/stores';
+  import WeatherResult from '$lib/components/WeatherResult.svelte';
+  import { start_month, end_month, country, city } from '$lib/stores';
   import { get } from 'svelte/store';
   import { onMount } from 'svelte';
 
@@ -11,77 +10,80 @@
   let currentSelection = '';
 
   async function getWeather() {
-    const date = get(selectedDate);
-    const location = get(selectedLocation);
+    const s_month = get(start_month);
+    const e_month = get(end_month);
+    const _country = get(country);
+    const _city = get(city);
 
-    if (date && location) {
-      try {
-        const response = await fetch('/api/weather', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            date,
-            location,
-          }),
-        });
-
-        if (response.ok) {
-          weatherData = await response.json();
-        } else {
-          console.error('Error fetching weather data:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error fetching weather data:', error);
-      }
-    } else {
-      console.warn('Date and location must be selected');
-    }
+    const response = await fetch('/api/weather', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        start_month: s_month,
+        end_month: e_month,
+        country: _country,
+        city: _city
+      })
+    });
+    weatherData = await response.json();
   }
 
-  // Subscribe to selectedDate and selectedLocation changes
+  // Subscribe to selected date and location changes
   onMount(() => {
-    const unsubscribeDate = selectedDate.subscribe(date => {
+    const unsubscribeStartMonth = start_month.subscribe(e => {
       updateCurrentSelection();
     });
 
-    const unsubscribeLocation = selectedLocation.subscribe(location => {
+    const unsubscribeEndMonth = end_month.subscribe(e => {
+      updateCurrentSelection();
+    })
+
+    const unsubscribeCountry = country.subscribe(e => {
+      updateCurrentSelection();
+    });
+
+    const unsubscribeCity = city.subscribe(e => {
       updateCurrentSelection();
     });
 
     return () => {
-      unsubscribeDate();
-      unsubscribeLocation();
+      unsubscribeStartMonth();
+      unsubscribeEndMonth();
+      unsubscribeCountry();
+      unsubscribeCity();
     };
   });
 
   function updateCurrentSelection() {
-    const date = get(selectedDate);
-    const location = get(selectedLocation);
-    if (date && location && location.country && location.place) {
-      currentSelection = `${location.country}, ${location.place} in Month ${date}`;
-    } else if (location && location.country && location.place){
+    const s_month = get(start_month);
+    const e_month = get(e_month);
+    const _country = get(country);
+    const _city = get(city);
+    if (s_month && e_month && _country && _city) {
+      currentSelection = `${_country}, ${_city} in Month ${s_month} ~ ${e_month}`;
+    } else if (country && city){
       currentSelection = 'Please Select Month';
     } else{
       currentSelection = '';
     }
   }
+
 </script>
 
 
 <div class="container">
-  <h1>WFT: Weather For Travel</h1>
+  <h1>Weather For Travel</h1>
 
   <DateSelector />
   <LocationSelector />
 
   <div class="status-text">{currentSelection}</div>
 
-  <button on:click={getWeather}>Get the Weather Calendar</button>
+  <button on:click={getWeather}>Get the weather forecast for my trip</button>
 
   {#if weatherData}
-    <WeatherCalendar {weatherData} />
-    <WeatherSuggestion {weatherData} />
+    <WeatherResult {weatherData} />
   {/if}
 </div>

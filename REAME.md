@@ -6,10 +6,11 @@ Sveltekit
 
 `cd tw-app`
 `npm install`
+`npm run dev`
 
 ---
 
-### Dev-Env Setting
+### Dev-Environment Setting
 
 `conda create -n svelte python=3.11`
 `conda activate svelte`
@@ -18,7 +19,4 @@ Sveltekit
 ### WorkLog
 
 - 240616 : Make sveltekit project
-- Next Todos
-  -- Use CGPT to first sketchout weather app
-  --- No daily result. minimum weekly
-  -- Style App
+- 240811 : First Demo Completed
