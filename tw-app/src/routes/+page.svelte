@@ -15,17 +15,15 @@
     const _country = get(country);
     const _city = get(city);
 
-    const response = await fetch('/api/weather', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        start_month: s_month,
-        end_month: e_month,
-        country: _country,
-        city: _city
-      })
+    const params = new URLSearchParams({
+      start_month: s_month,
+      end_month: e_month,
+      country: _country,
+      city: _city
+    });
+
+    const response = await fetch(`http://localhost:8000/wether?${params.toString()}`, {
+      method: 'GET'  // GET 메서드를 사용합니다.
     });
     weatherData = await response.json();
   }
@@ -58,7 +56,7 @@
 
   function updateCurrentSelection() {
     const s_month = get(start_month);
-    const e_month = get(e_month);
+    const e_month = get(end_month);
     const _country = get(country);
     const _city = get(city);
     if (s_month && e_month && _country && _city) {

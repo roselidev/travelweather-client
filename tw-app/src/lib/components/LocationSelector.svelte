@@ -70,7 +70,6 @@
         {/each}
       </div>
     </div>
-    <button on:click={() => mode = 'detailed'}>상세선택</button>
   {:else}
     <select on:change={handleCountryChange}>
       {#each countries as c}
