@@ -22,7 +22,7 @@
       city: _city
     });
 
-    const response = await fetch(`http://localhost:8000/wether?${params.toString()}`, {
+    const response = await fetch(`http://back:8000/wether?${params.toString()}`, {
       method: 'GET'  // GET 메서드를 사용합니다.
     });
     weatherData = await response.json();
